@@ -1,10 +1,16 @@
 import sys
-import loggerwriter
 import logging
+import logging.handlers
+import loggerwriter
 
 
 def test_loggerwriter():
+    rotating_file_handler = logging.handlers.RotatingFileHandler(
+        'loggerwritet_test.log', maxBytes=10 * 2 ** 20, backupCount=10)
+    rotating_file_handler.terminator = ''
+
     logger = logging.getLogger(f'{__package__}.stdout')
+    logger.addHandler(rotating_file_handler)
     logger.setLevel(logging.INFO)
     logger.propagate = False
 
@@ -15,7 +21,8 @@ def test_loggerwriter():
         format='[%(asctime)s|%(filename)s:%(lineno)d|%(funcName)s|%(levelname)s] %(message)s'
     )
 
-    print('test')
+    logger.info('{}\n'.format('logger test'))
+    print('print test')
 
 
 if __name__ == '__main__':
